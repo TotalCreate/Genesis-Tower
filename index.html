@@ -137,11 +137,12 @@
                     <th>Poza</th>
                     <th>Dimensiuni</th>
                     <th>Observații</th>
+                    <th>Bucati/Mp</th>
                     <th>3D</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Conținutul va fi generat din fișierul Excel -->
+                <!-- Conținutul va fi generat din fișierul xlsx -->
             </tbody>
         </table>
     </main>
@@ -162,8 +163,8 @@
 console.log('Date încărcate din fișierul Excel:', data);
     
     <script>
-        let models = [2];
-        let currentModelIndex = 2;
+        let models = [];
+        let currentModelIndex = 0;
 
         async function loadExcelData() {
             try {

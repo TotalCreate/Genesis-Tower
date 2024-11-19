@@ -11,12 +11,18 @@
             margin: 20px;
         }
         header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
         header img {
             max-height: 100px;
-            margin: 0 10px;
+        }
+        header h1 {
+            flex: 1;
+            text-align: center;
+            margin: 0;
         }
         table {
             width: 100%;
@@ -36,16 +42,20 @@
             cursor: pointer;
         }
         #3d-viewer-container {
-            display: none;
             text-align: center;
             margin-top: 20px;
+        }
+        #3d-viewer {
+            width: 100%;
+            max-width: 500px;
+            height: 500px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Genesis Tower by Total Create</h1>
         <img src="assets/logo1.png" alt="Logo 1">
+        <h1>Genesis Tower by Total Create</h1>
         <img src="assets/logo2.png" alt="Logo 2">
     </header>
 
@@ -65,19 +75,23 @@
                 <td><img src="assets/image1.jpg" alt="Obiect 1" class="image-2d"></td>
                 <td>100x50x30 mm</td>
                 <td>Descrierea obiectului 1</td>
-                <td><button onclick="open3DModel('assets/model1.glb')">Deschide 3D</button></td>
+                <td>
+                    <button onclick="open3DModel('assets/model1.glb')" style="font-size: 16px; padding: 10px 20px;">Deschide 3D</button>
+                </td>
             </tr>
             <tr>
                 <td>2</td>
                 <td><img src="assets/image2.jpg" alt="Obiect 2" class="image-2d"></td>
                 <td>200x100x50 mm</td>
                 <td>Descrierea obiectului 2</td>
-                <td><button onclick="open3DModel('assets/model2.glb')">Deschide 3D</button></td>
+                <td>
+                    <button onclick="open3DModel('assets/model2.glb')" style="font-size: 16px; padding: 10px 20px;">Deschide 3D</button>
+                </td>
             </tr>
         </tbody>
     </table>
 
-    <div id="3d-viewer-container">
+    <div id="3d-viewer-container" style="display:none;">
         <model-viewer id="3d-viewer" auto-rotate camera-controls></model-viewer>
     </div>
 

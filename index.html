@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genesis Tower by Total Create</title>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <style>
         body {
-            font-family: Georgia, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 20px;
         }
         header {
@@ -87,7 +88,7 @@
         <img src="assets/logo2.png" alt="Logo 2">
     </header>
 
-    <table>
+    <table id="data-table">
         <thead>
             <tr>
                 <th>Nr.</th>
@@ -98,24 +99,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td><img src="assets/image1.jpg" alt="Obiect 1" class="image-2d"></td>
-                <td>100x50x30 mm</td>
-                <td>Descrierea obiectului 1</td>
-                <td>
-                    <button onclick="open3DModel(0)">Deschide 3D</button>
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td><img src="assets/image2.jpg" alt="Obiect 2" class="image-2d"></td>
-                <td>200x100x50 mm</td>
-                <td>Descrierea obiectului 2</td>
-                <td>
-                    <button onclick="open3DModel(1)">Deschide 3D</button>
-                </td>
-            </tr>
+            <!-- Conținutul va fi generat din fișierul Excel -->
         </tbody>
     </table>
 
@@ -128,14 +112,39 @@
     </div>
 
     <script>
-        const models = ['assets/model1.glb', 'assets/model2.glb'];
-        let currentModelIndex = 0;
+        // Funcție pentru a încărca fișierul .xlsx
+        async function loadExcelData() {
+            const response = await fetch('assets/data.xlsx');
+            const arrayBuffer = await response.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const data = XLSX.utils.sheet_to_json(sheet);
 
+            const tableBody = document.querySelector('#data-table tbody');
+            const models = [];
+
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><img src="${row['Poza']}" alt="Obiect ${index + 1}" class="image-2d"></td>
+                    <td>${row['Dimensiuni']}</td>
+                    <td>${row['Observații']}</td>
+                    <td><button onclick="open3DModel(${index})">Deschide 3D</button></td>
+                `;
+                tableBody.appendChild(tr);
+                models.push(row['3D']);
+            });
+
+            // Stochează modelele pentru utilizare ulterioară
+            window.models = models;
+        }
+
+        // Funcții pentru deschiderea și închiderea modelului 3D
         function open3DModel(index) {
-            currentModelIndex = index;
             const modelViewer = document.getElementById('3d-viewer');
-            modelViewer.setAttribute('src', models[currentModelIndex]);
-
+            modelViewer.setAttribute('src', window.models[index]);
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('viewer-modal').style.display = 'block';
         }
@@ -146,10 +155,11 @@
         }
 
         function next3DModel() {
-            currentModelIndex = (currentModelIndex + 1) % models.length;
-            const modelViewer = document.getElementById('3d-viewer');
-            modelViewer.setAttribute('src', models[currentModelIndex]);
+            // Implementați logica pentru a naviga la următorul model
         }
+
+        // Încarcă datele din fișierul Excel la încărcarea paginii
+        loadExcelData();
     </script>
 </body>
 </html>

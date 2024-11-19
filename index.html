@@ -7,7 +7,7 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Georgia, sans-serif;
             margin: 20px;
         }
         header {
@@ -41,14 +41,42 @@
             max-width: 100px;
             cursor: pointer;
         }
-        #3d-viewer-container {
-            text-align: center;
-            margin-top: 20px;
+        /* Stil pentru fereastra modală */
+        #viewer-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
         }
-        #3d-viewer {
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 500px;
-            height: 500px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 500;
+        }
+        #close-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            float: right;
+        }
+        #next-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -76,7 +104,7 @@
                 <td>100x50x30 mm</td>
                 <td>Descrierea obiectului 1</td>
                 <td>
-                    <button onclick="open3DModel('assets/model1.glb')" style="font-size: 16px; padding: 10px 20px;">Deschide 3D</button>
+                    <button onclick="open3DModel(0)">Deschide 3D</button>
                 </td>
             </tr>
             <tr>
@@ -85,23 +113,42 @@
                 <td>200x100x50 mm</td>
                 <td>Descrierea obiectului 2</td>
                 <td>
-                    <button onclick="open3DModel('assets/model2.glb')" style="font-size: 16px; padding: 10px 20px;">Deschide 3D</button>
+                    <button onclick="open3DModel(1)">Deschide 3D</button>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <div id="3d-viewer-container" style="display:none;">
+    <!-- Fereastra modală și overlay -->
+    <div id="overlay" onclick="close3DModel()"></div>
+    <div id="viewer-modal">
+        <button id="close-btn" onclick="close3DModel()">Închide</button>
         <model-viewer id="3d-viewer" auto-rotate camera-controls></model-viewer>
+        <button id="next-btn" onclick="next3DModel()">Următorul</button>
     </div>
 
     <script>
-        function open3DModel(modelPath) {
-            const viewerContainer = document.getElementById('3d-viewer-container');
-            const modelViewer = document.getElementById('3d-viewer');
+        const models = ['assets/model1.glb', 'assets/model2.glb'];
+        let currentModelIndex = 0;
 
-            modelViewer.setAttribute('src', modelPath);
-            viewerContainer.style.display = 'block';
+        function open3DModel(index) {
+            currentModelIndex = index;
+            const modelViewer = document.getElementById('3d-viewer');
+            modelViewer.setAttribute('src', models[currentModelIndex]);
+
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('viewer-modal').style.display = 'block';
+        }
+
+        function close3DModel() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('viewer-modal').style.display = 'none';
+        }
+
+        function next3DModel() {
+            currentModelIndex = (currentModelIndex + 1) % models.length;
+            const modelViewer = document.getElementById('3d-viewer');
+            modelViewer.setAttribute('src', models[currentModelIndex]);
         }
     </script>
 </body>

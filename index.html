@@ -158,10 +158,12 @@
             <button id="next-btn" onclick="next3DModel()">Next</button>
         </div>
     </div>
-
+    
+console.log('Date încărcate din fișierul Excel:', data);
+    
     <script>
-        let models = [];
-        let currentModelIndex = 0;
+        let models = [2];
+        let currentModelIndex = 2;
 
         async function loadExcelData() {
             try {

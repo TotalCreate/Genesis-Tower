@@ -7,21 +7,19 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <style>
-        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: transparent !important; /* Fundal complet transparent */
-            margin: 0; /* Elimină eventuale margini implicite */
-            padding: 0; /* Elimină eventuale spațieri implicite */
+            background-color: transparent !important;
         }
+
         main {
-            background-color: transparent !important; /* Fundal complet transparent */
-            margin: 0; /* Elimină eventuale margini implicite */
-            padding: 20px; /* Elimină eventuale spațieri implicite */
-            box-shadow: none;
+            background-color: transparent !important;
+            padding: 20px;
+            overflow-x: auto; /* Permite scroll orizontal */
         }
+
         header {
             position: sticky;
             top: 0;
@@ -46,50 +44,46 @@
         }
 
         .parallax {
-           position: absolute;
-           top: 0;
-           left: 0;
-           width: 100%;
-           height: 100%;
-           background-image: url('assets/background.jpg');
-           background-attachment: fixed;
-           background-position: center center;
-           background-repeat: repeat;
-           background-size: cover;
-           z-index: -1; /* Mută imaginea parallax sub toate elementele */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 150%;
+            background-image: url('assets/background.jpg');
+            background-attachment: fixed;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
         }
-       
+
         table {
             width: 80%;
             margin: 20px auto;
             border-collapse: collapse;
-            background-color: white !important; /* Fundal complet transparent */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Umbră pentru efect plutitor */
-            border: none; /* Elimină orice margine implicită */
+            background-color: rgba(255, 255, 255, 0.9); /* Fundal semi-transparent */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
 
         th, td {
-            border: 1px solid rgba(0, 0, 0, 0.5); /* Margini semi-transparente */
+            border: 1px solid rgba(0, 0, 0, 0.5);
             padding: 8px;
             text-align: center;
-            color: rgb(22, 21, 21); /* Text alb pentru vizibilitate */
-            background-color: transparent !important; /* Fundal transparent */
+            color: #000;
         }
 
         th {
-            background-color: rgba(0, 0, 0, 0.5); /* Fundal semi-transparent pentru antet */
-            color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
             padding: 10px;
         }
 
         .image-2d {
             max-width: 100px;
             cursor: pointer;
-            top: 50%;
-            left: 50%;
         }
 
-        /* Fereastra modală pentru imagine */
         #image-modal, #viewer-modal {
             display: none;
             position: fixed;
@@ -100,20 +94,15 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             padding: 10px;
-            width: 95%; /* Crește lățimea ferestrei modale */
-            max-width: 600px; /* Ajustează lățimea maximă */
-            height: 70%; /* Crește înălțimea ferestrei modale */
-            max-height: 500px; /* Ajustează înălțimea maximă */
-            overflow: hidden;
+            width: 90%; /* Ajustează lățimea ferestrei modale */
+            max-width: 800px;
+            height: 90%; /* Crește înălțimea ferestrei modale */
+            max-height: 800px;
         }
 
         #image-modal img, #viewer-modal model-viewer {
-            max-width: 100%;
-            max-height: 100%;
-            top: center;
-            left: center;
-            resize: both; /* Permite redimensionarea */
-            overflow: auto; /* Adaugă bare de derulare dacă este necesar */
+            width: 100%; /* Umple fereastra modală */
+            height: 100%;
         }
 
         #overlay {
@@ -147,12 +136,7 @@
             margin: 10px;
         }
 
-        /* Responsivitate */
         @media (max-width: 768px) {
-            table {
-                width: 100%;
-            }
-
             header {
                 flex-direction: column;
                 align-items: center;
@@ -164,11 +148,31 @@
 
             header h1 {
                 font-size: 1.2em;
+                margin: 10px 0;
             }
 
             .parallax {
                 height: 300px;
-                background-attachment: scroll;
+                background-attachment: scroll; /* Pentru telefoane */
+            }
+
+            table {
+                width: 100%; /* Tabelul ocupă întreaga lățime */
+                font-size: 0.9em; /* Text mai mic */
+            }
+
+            #viewer-modal, #image-modal {
+                width: 90%;
+                max-height: 80vh;
+            }
+
+            #back-btn, #next-btn {
+                font-size: 0.8em;
+                padding: 5px;
+            }
+
+            #close-btn {
+                font-size: 1em;
             }
         }
     </style>
@@ -191,7 +195,7 @@
                     <th>Dimensiuni</th>
                     <th>Observații</th>
                     <th>Cod_Culoare</th>
-                    <th>Cantitati</th>
+                    <th>Cantități</th>
                     <th>3D</th>
                 </tr>
             </thead>
@@ -201,14 +205,12 @@
         </table>
     </main>
 
-    <!-- Fereastra modală pentru imagine -->
     <div id="overlay" onclick="closeModals()"></div>
     <div id="image-modal">
         <button id="close-image-btn" onclick="closeModals()">X</button>
         <img id="modal-image" src="" alt="Imagine mare">
     </div>
 
-    <!-- Fereastra modală pentru model 3D -->
     <div id="viewer-modal">
         <button id="close-btn" onclick="closeModals()">X</button>
         <model-viewer id="3d-viewer" auto-rotate camera-controls></model-viewer>
@@ -244,7 +246,7 @@
                         <td>${row['Dimensiuni']}</td>
                         <td>${row['Observații']}</td>
                         <td>${row['Cod_Culoare']}</td>
-                        <td>${row['Cantitati']}</td>
+                        <td>${row['Cantități']}</td>
                         <td><button onclick="open3DModel(${index})">Deschide 3D</button></td>
                     `;
                     tableBody.appendChild(tr);

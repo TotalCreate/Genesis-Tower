@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Tower by Total Create</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: transparent !important; /* Fundal complet transparent */
+            margin: 0; /* Elimină eventuale margini implicite */
+            padding: 0; /* Elimină eventuale spațieri implicite */
+        }
+        main {
+            background-color: transparent !important; /* Fundal complet transparent */
+            margin: 0; /* Elimină eventuale margini implicite */
+            padding: 200px; /* Elimină eventuale spațieri implicite */
+            box-shadow: none;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        header img {
+            max-height: 50px;
+        }
+
+        header h1 {
+            flex: 1;
+            text-align: center;
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .parallax {
+           position: absolute;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 150%;
+           background-image: url('assets/background.jpg');
+           background-attachment: fixed;
+           background-position: center center;
+           background-repeat: repeat;
+           background-size: cover;
+           z-index: -1; /* Mută imaginea parallax sub toate elementele */
+        }
+       
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white !important; /* Fundal complet transparent */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Umbră pentru efect plutitor */
+            border: none; /* Elimină orice margine implicită */
+        }
+
+        th, td {
+            border: 1px solid rgba(0, 0, 0, 0.5); /* Margini semi-transparente */
+            padding: 8px;
+            text-align: center;
+            color: rgb(22, 21, 21); /* Text alb pentru vizibilitate */
+            background-color: transparent !important; /* Fundal transparent */
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.5); /* Fundal semi-transparent pentru antet */
+            color: rgb(0, 0, 0);
+            padding: 10px;
+        }
+
+        .image-2d {
+            max-width: 100px;
+            cursor: pointer;
+            top: 50%;
+            left: 50%;
+        }
+
+        /* Fereastra modală pentru imagine */
+        #image-modal, #viewer-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px;
+            width: 95%; /* Crește lățimea ferestrei modale */
+            max-width: 600px; /* Ajustează lățimea maximă */
+            height: 70%; /* Crește înălțimea ferestrei modale */
+            max-height: 500px; /* Ajustează înălțimea maximă */
+            overflow: hidden;
+        }
+
+        #image-modal img, #viewer-modal model-viewer {
+            max-width: 100%;
+            max-height: 100%;
+            top: center;
+            left: center;
+            resize: both; /* Permite redimensionarea */
+            overflow: auto; /* Adaugă bare de derulare dacă este necesar */
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 500;
+        }
+
+        #close-btn, #close-image-btn {
+            background-color: transparent;
+            color: black;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #back-btn, #next-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        /* Responsivitate */
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header img {
+                max-height: 40px;
+            }
+
+            header h1 {
+                font-size: 1.2em;
+            }
+
+            .parallax {
+                height: 300px;
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="assets/logo1.png" alt="Logo 1">
+        <h1>Genesis Tower by Total Create</h1>
+        <img src="assets/logo2.png" alt="Logo 2">
+    </header>
+
+    <div class="parallax"></div>
+
+    <main>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Nr.</th>
+                    <th>Poza</th>
+                    <th>Dimensiuni</th>
+                    <th>Observații</th>
+                    <th>Cod_Culoare</th>
+                    <th>Cantitati</th>
+                    <th>3D</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Conținutul va fi generat din fișierul Excel -->
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Fereastra modală pentru imagine -->
+    <div id="overlay" onclick="closeModals()"></div>
+    <div id="image-modal">
+        <button id="close-image-btn" onclick="closeModals()">X</button>
+        <img id="modal-image" src="" alt="Imagine mare">
+    </div>
+
+    <!-- Fereastra modală pentru model 3D -->
+    <div id="viewer-modal">
+        <button id="close-btn" onclick="closeModals()">X</button>
+        <model-viewer id="3d-viewer" auto-rotate camera-controls></model-viewer>
+        <div style="text-align: center;">
+            <button id="back-btn" onclick="prev3DModel()">Back</button>
+            <button id="next-btn" onclick="next3DModel()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let models = [];
+        let currentModelIndex = 0;
+
+        async function loadExcelData() {
+            try {
+                const response = await fetch('assets/data.xlsx');
+                if (!response.ok) {
+                    throw new Error('HTTP error! Status: ${response.status}');
+                }
+
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(sheet);
+
+                const tableBody = document.querySelector('#data-table tbody');
+                models = data.map((row, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><img src="${row['Poza']}" alt="Obiect ${index + 1}" class="image-2d" onclick="openImageModal('${row['Poza']}')"></td>
+                        <td>${row['Dimensiuni']}</td>
+                        <td>${row['Observații']}</td>
+                        <td>${row['Cod_Culoare']}</td>
+                        <td>${row['Cantitati']}</td>
+                        <td><button onclick="open3DModel(${index})">Deschide 3D</button></td>
+                    `;
+                    tableBody.appendChild(tr);
+                    return row['3D'];
+                });
+            } catch (error) {
+                console.error('Eroare la încărcarea fișierului Excel:', error);
+            }
+        }
+
+        function openImageModal(imageSrc) {
+            document.getElementById('modal-image').src = imageSrc;
+            document.getElementById('image-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function open3DModel(index) {
+            currentModelIndex = index;
+            const modelViewer = document.getElementById('3d-viewer');
+            modelViewer.setAttribute('src', models[currentModelIndex]);
+            document.getElementById('viewer-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeModals() {
+            document.getElementById('image-modal').style.display = 'none';
+            document.getElementById('viewer-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function prev3DModel() {
+            currentModelIndex = (currentModelIndex - 1 + models.length) % models.length;
+            open3DModel(currentModelIndex);
+        }
+
+        function next3DModel() {
+            currentModelIndex = (currentModelIndex + 1) % models.length;
+            open3DModel(currentModelIndex);
+        }
+
+        loadExcelData();
+    </script>
+</body>
+</html>

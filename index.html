@@ -7,6 +7,37 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <style>
+        /* Stiluri generale pentru dispozitive mai mici (telefoane) */
+@media (max-width: 768px) {
+    #viewer-modal {
+        width: 95%; /* Fă fereastra să ocupe aproape toată lățimea ecranului */
+        height: 90%; /* Ajustează înălțimea pentru a se potrivi mai bine */
+    }
+    table {
+        width: 100%; /* Tabelul să ocupe întreaga lățime a ecranului */
+    }
+    header {
+        flex-direction: column; /* Aranjează elementele din header pe verticală */
+        align-items: center;
+    }
+    header img {
+        max-height: 40px; /* Diminuează dimensiunea logourilor */
+    }
+    header h1 {
+        font-size: 1.2em; /* Micșorează titlul pentru telefoane */
+    }
+}
+
+/* Stiluri pentru dispozitive mai mari (tablete și laptopuri) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    #viewer-modal {
+        width: 80%; /* Fă fereastra un pic mai mică decât pe desktop */
+        height: 85%; /* Ajustează înălțimea */
+    }
+    table {
+        width: 90%; /* Tabelul să fie mai îngust pe tablete */
+    }
+}
         body {
             font-family: Arial, sans-serif;
             margin: 0;

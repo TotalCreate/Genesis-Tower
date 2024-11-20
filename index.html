@@ -105,6 +105,15 @@
             height: 100%;
         }
 
+        #image-modal img {
+            width: auto; /* Păstrează proporțiile imaginii */
+            height: auto; /* Păstrează proporțiile imaginii */
+            max-width: 100%; /* Asigură-te că imaginea nu depășește fereastra */
+            max-height: 90vh; /* Limitează înălțimea la 90% din înălțimea vizibilă */
+            display: block;
+            margin: 0 auto; /* Centrează imaginea */
+        }
+
         #overlay {
             display: none;
             position: fixed;
@@ -138,17 +147,17 @@
 
         @media (max-width: 768px) {
             header {
-                flex-direction: column;
+                flex-direction: row; /* Păstrează orientarea pe orizontală */
                 align-items: center;
             }
 
             header img {
-                max-height: 40px;
+                max-height: 30px; /* Reduce dimensiunea logo-urilor */
             }
 
             header h1 {
-                font-size: 1.2em;
-                margin: 10px 0;
+                font-size: 1em; /* Reduce dimensiunea titlului */
+                margin: 0 10px; /* Adaugă spațiu între logo-uri și titlu */
             }
 
             .parallax {

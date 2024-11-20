@@ -14,16 +14,27 @@
             background: #f0f0f0;
         }
         header {
-            position: top;
-            top: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
+    position: top;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    height: 200px; /* Asigură o înălțime consistentă */
+}
+
+.parallax {
+    background-image: url('assets/background.jpg');
+    height: 200px; /* Aceeași înălțime ca header-ul */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+}
         header img {
             max-height: 50px;
         }
